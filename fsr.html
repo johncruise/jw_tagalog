@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>S-4-E</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<meta author="John Joelle Cruz" />
+</head>
+<body>
+
+<div data-role="page" id="fsr_main">
+	<div data-role="header">
+		<h1>Field Service Report</h1>
+	</div>
+
+	<div role="main" class="ui-content">
+		<p>Please fill up the form below:</p>
+
+		<form method="post">
+			<div class="ui-field-contain">
+				<label for="username">Name</label>
+				<input type="text" id="username" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="month">Month</label>
+				<input type="month" id="month" name="month" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="placements">Placements</label>
+				<input type="number" id="placements" name="placements" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="videoshowings">Video Showings</label>
+				<input type="number" id="videshowings" name="videoshowings" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="hours">Hours</label>
+				<input type="number" id="hours" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="rv">Return Visits</label>
+				<input type="number" id="rv" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="studies">Number of <i>Different</i> Bible Studies Conducted</label>
+				<input type="number" id="studies" />
+			</div>
+
+			<div class="ui-field-contain">
+				<label for="comments">Comments</label>
+				<input type="text" id="comments" />
+			</div>
+
+			<div class="ui-field-contain">
+				<input type="submit" id="submit" value="Submit Report" />
+			</div>
+		</form>
+	</div>
+
+	<div data-role="footer">
+		<h4></h4>
+	</div>
+
+</div>
+
+<!-- pop up for warning on studies without RVs -->
+<div data-role="dialog" id="invalid_rv_studies">
+	<div data-role="header" data-theme="b">
+		<h1>Warning</h1>
+	</div>
+
+	<div role="content" class="ui-content">
+		<h2>Invalid Return Visits or Bible Studies values</h2>
+		<p>You can't report a study without an  RV.  Each time you conduct a study, it counts as an return visit.</p>
+		<p><a href="#fsr_main" data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+				Go Back</a>
+		</p>
+	</div>
+
+	<div data-role="footer">
+		<h4></h4>
+	</div>
+</div>
+
+<!-- pop up warning for no name supplied -->
+<div data-role="dialog" id="no_name">
+	<div data-role="header" data-theme="b">
+		<h1>Warning</h1>
+	</div>
+
+	<div role="content" class="ui-content">
+		<h2>Invalid Name</h2>
+		<p>You must supply a name in the form.</p>
+		<p><a href="#fsr_main" data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+				Go Back</a>
+		</p>
+	</div>
+
+	<div data-role="footer">
+		<h4></h4>
+	</div>
+</div>
+
+<!-- pop up warning for no name supplied -->
+<div data-role="dialog" id="no_month">
+	<div data-role="header" data-theme="b">
+		<h1>Warning</h1>
+	</div>
+
+	<div role="content" class="ui-content">
+		<h2>Invalid Month</h2>
+		<p>You must select a month for your report activity.</p>
+		<p><a href="#fsr_main" data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+				Go Back</a>
+		</p>
+	</div>
+
+	<div data-role="footer">
+		<h4></h4>
+	</div>
+</div>
+
+<!-- TODO: add more dialogs for when something needs to be fixed -->
+
+<!-- all scripts will be below -->
+<script>
+	$("#submit").click(function() {
+		var $rv=parseInt($("#rv").val());
+		var $studies=parseInt($("#studies").val());
+		var $hours=parseInt($("#hours").val());
+		var $name=$.trim($("#username").val());
+		var $month=$.trim($("#month").val());
+		if($name == "") {
+			$.mobile.changePage("#no_name", {transition: "pop", changeHash: true, role: "dialog"});
+			return false;
+		}
+		if($month == "") {
+			$.mobile.changePage("#no_month", {transition: "pop", changeHash: true});
+			return false;
+		}
+		if($studies > 0 && $rv < 1) {
+			$.mobile.changePage("#invalid_rv_studies", {transition: "pop", changeHash: true});
+			return false;
+		}
+		// TODO: add more checks on the data
+		return true;
+	});
+</script>
+
+</body>
+</html>
