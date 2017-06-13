@@ -1,15 +1,28 @@
+#!/bin/env python
+# ---------------------------------------------------------------------
+# getclmsched.py
+# by John Cruz 2017-06-12
+#
+# Get's the Tagalog CLM schedule for a particular month and print it
+# out.
+#
+# ---------------------------------------------------------------------
 from __future__ import unicode_literals, print_function
 import urllib2
 import re
 
 # +++ constants
 URL_HEADER = "https://www.jw.org"
+months = ["enero", "pebrero", "marso", "abril", "mayo", "hunyo", "hulyo", "agosto", "setyembre",
+	"oktobre", "nobyembre", "disyembre"]
 
 
 def main():
-	"""TODO: put documenation here"""
+	"""This is the main function"""
+	month = int(raw_input("Month (1-12 where 1=Jan & 12=Dec): "))
+	year = int(raw_input("Year (ex: 2017): "))
 	site = urllib2.urlopen("https://www.jw.org/tl/publikasyon/jw-workbook-para-sa-pulong/"
-		"agosto-2017-mwb/")
+		"{}-{}-mwb/".format(months[month - 1], year))
 	data = site.read()
 	res = re.findall(r"(?P<url>/.+?iskedyul-ng-pulong.+\d+/?)\">(?P<daterange>.+?)</a>", data)
 	for each in res:
