@@ -3,8 +3,8 @@
 # getclmsched.py
 # by John Cruz 2017-06-12
 #
-# Get's the Tagalog CLM schedule for a particular month and print it
-# out.
+# Retrieves the Tagalog CLM schedule for a particular month and print
+# it out in the screen.
 #
 # ---------------------------------------------------------------------
 from __future__ import unicode_literals, print_function
