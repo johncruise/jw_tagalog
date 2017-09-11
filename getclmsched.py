@@ -14,7 +14,7 @@ import re
 # +++ constants
 URL_HEADER = "https://www.jw.org"
 months = ["enero", "pebrero", "marso", "abril", "mayo", "hunyo", "hulyo", "agosto", "setyembre",
-	"oktobre", "nobyembre", "disyembre"]
+	"oktubre", "nobyembre", "disyembre"]
 
 
 def main(month, year):
@@ -27,9 +27,15 @@ def main(month, year):
 	Returns:
 	- `None`
 	"""
-	site = urllib2.urlopen("https://www.jw.org/tl/publikasyon/jw-workbook-para-sa-pulong/"
-		"{}-{}-mwb/".format(months[month - 1], year))
-	data = site.read()
+	try:
+		pageurl = "https://www.jw.org/tl/publikasyon/jw-workbook-para-sa-pulong/{}-{}-mwb/".format(
+			months[month - 1], year)
+		site = urllib2.urlopen(pageurl)
+		data = site.read()
+	except urllib2.URLError as err:
+		print("Failed to retrieve page: {}".format(pageurl))
+		print("{}: {}".format(err.__class__.__name__, err))
+		exit(0)
 	res = re.findall(r"(?P<url>/.+?iskedyul-ng-pulong.+\d+/?)\">(?P<daterange>.+?)</a>", data)
 	for each in res:
 		tmp = each[1].decode("latin-1")
