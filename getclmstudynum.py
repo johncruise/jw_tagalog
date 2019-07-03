@@ -8,8 +8,10 @@
 #
 # ---------------------------------------------------------------------
 from __future__ import unicode_literals, print_function
+import argparse
 import urllib2
 import re
+from datetime import datetime
 
 # +++ constants
 URL_HEADER = "https://www.jw.org"
@@ -43,11 +45,23 @@ def main(month, year):
 	# https://www.jw.org/en/publications/jw-meeting-workbook/june-2019-mwb/meeting-schedule-june3-9/
 	res = re.findall(r'/en/publications/jw-meeting-workbook/.+?/meeting-schedule-.+?/',
 		data.decode('utf-8'))
-	for each in set(res):
+	urls = []
+	for each in res:
+		if each in urls:
+			continue
+		urls.append(each)
+	for each in urls:
 		tmp = each[1].decode("latin-1")
-		datedata = re.match(r'.+meeting-schedule-(.+?)/', each)
+		datedata = re.match(r'.+meeting-schedule-(([a-z]+)([0-9]+-[0-9]+))/', each)
+		if datedata is not None:
+			datestr = '{} {}'.format(datedata.group(2).capitalize()[:3], datedata.group(3))
+		else:
+			datedata = re.match(r'.+meeting-schedule-(([a-z]+)([0-9]+)-([a-z]+)([0-9]+))/', each)
+			datestr = '{} {}-{} {}'.format(
+				datedata.group(2).capitalize()[:3], datedata.group(3),
+				datedata.group(4).capitalize()[:3], datedata.group(5))
 		studies = grabweekstudies(URL_HEADER + each)
-		print("Studies for {}: {!r}".format(datedata.group(1), studies))
+		print("- {}: {!r}".format(datestr, studies))
 
 
 def grabweekstudies(url):
@@ -71,11 +85,24 @@ def grabweekstudies(url):
 	studies = []
 	for each in study:
 		res = re.match('.+study.+?(\d+)</a>', each)
-		studies.append('{}'.format(res.group(1)))
+		studies.append(int(res.group(1)))
 	return studies
 
 
 if __name__ == "__main__":
-	month = int(raw_input("Month (1-12 where 1=Jan & 12=Dec): "))
-	year = int(raw_input("Year (ex: 2017): "))
+	today = datetime.now()
+	month = today.month + 1
+	year = today.year
+	if month == 13:
+		month = 1
+		year += 1
+	parser = argparse.ArgumentParser('CLM Study Number')
+	parser.add_argument('-m', '--month', choices=[
+		'{}'.format(each) for each in range(1, 13)], default=month)
+	parser.add_argument('-y', '--year', choices=[
+		'{}'.format(each) for each in [year, year + 1]], default=year)
+	args = parser.parse_args()
+	month = int(args.month)
+	year = int(args.year)
+	print('{} {}'.format(months[month - 1].capitalize(), year))
 	main(month, year)
