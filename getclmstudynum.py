@@ -46,9 +46,10 @@ def main(month, year):
 	# https://www.jw.org/en/publications/jw-meeting-workbook/june-2019-mwb/meeting-schedule-june3-9/
 	# https://www.jw.org/en/library/jw-meeting-workbook/december-2019-mwb/meeting-schedule-december2-8/
 	# https://www.jw.org/en/library/jw-meeting-workbook/january-2020-mwb/Our-Christian-Life-and-Ministry-Schedule-for-January-6-12-2020/
+	# https://www.jw.org/en/library/jw-meeting-workbook/april-2020-mwb/Life-and-Ministry-Meeting-Schedule-for-April-20-26-2020/
 	res = None
 	res = re.findall(
-		r'/en/library/jw-meeting-workbook/.+?/(meeting-schedule|Our-Christian-Life-and-Ministry-Schedule-for)-(.+?)/',
+		r'/en/library/jw-meeting-workbook/.+?/(meeting-schedule|[^/]*Life-and-Ministry[^/]*-Schedule-for)-(.+?)/',
 		data.decode('utf-8'))
 	urls = []
 	for each in res:
