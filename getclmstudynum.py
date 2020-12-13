@@ -32,8 +32,12 @@ def main(month, year):
 	- `None`
 	"""
 	try:
-		pageurl = 'https://www.jw.org/en/library/jw-meeting-workbook/{}-{}-mwb/'.format(
-			months[month - 1], year)
+		if year < 2021:
+			pageurl = 'https://www.jw.org/en/library/jw-meeting-workbook/{}-{}-mwb/'.format(
+				months[month - 1], year)
+		else:
+			pageurl = 'https://www.jw.org/en/library/jw-meeting-workbook/{}-{}-{}-mwb/'.format(
+				months[month -1], months[month], year)
 		# print('Opening workbook for {}/{}...'.format(month, year))
 		site = urllib2.urlopen(pageurl)
 		data = site.read()
@@ -47,6 +51,7 @@ def main(month, year):
 	# https://www.jw.org/en/library/jw-meeting-workbook/december-2019-mwb/meeting-schedule-december2-8/
 	# https://www.jw.org/en/library/jw-meeting-workbook/january-2020-mwb/Our-Christian-Life-and-Ministry-Schedule-for-January-6-12-2020/
 	# https://www.jw.org/en/library/jw-meeting-workbook/april-2020-mwb/Life-and-Ministry-Meeting-Schedule-for-April-20-26-2020/
+	# https://www.jw.org/en/library/jw-meeting-workbook/january-february-2021-mwb/Life-and-Ministry-Meeting-Schedule-for-January-4-10-2021/
 	res = None
 	res = re.findall(
 		r'/en/library/jw-meeting-workbook/.+?/(meeting-schedule|[^/]*Life-and-Ministry[^/]*-Schedule-for)-(.+?)/',
